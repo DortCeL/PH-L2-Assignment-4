@@ -2,8 +2,14 @@ import bcrypt from "bcryptjs"
 import { prisma } from "../../lib/prisma"
 import jwt from "jsonwebtoken"
 import config from "../../config"
+import { UserRole } from "../../types/types"
 
-const createUserIntoDB = async (payload: any) => {
+const createUserIntoDB = async (payload: {
+    name: string
+    email: string
+    password: string
+    role: UserRole
+}) => {
     const hashPassword = await bcrypt.hash(payload.password, 8)
     const result = await prisma.user.create({
         data: { ...payload, password: hashPassword },

@@ -23,7 +23,7 @@ model User {
     email    String @unique
     name     String
     password String
-    role     Role
+    role     Role @default(CUSTOMER)
     status   Status @default(ACTIVE)
 
     createdAt DateTime @default(now())
