@@ -7,7 +7,7 @@ const seedAdmin = async () => {
         const hashedPassword = await bcrypt.hash("123456", 8)
         const adminData = {
             name: "Admin",
-            email: "admin.gmail.com",
+            email: "admin@gmail.com",
             role: UserRole.admin,
             password: hashedPassword,
         }

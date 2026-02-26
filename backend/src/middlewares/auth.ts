@@ -3,6 +3,7 @@ import { UserRole, UserStatus } from "../types/types"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { prisma } from "../lib/prisma"
 import config from "../config"
+import sendResponse from "../utils/sendResponse"
 
 const auth = (...roles: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +14,7 @@ const auth = (...roles: UserRole[]) => {
             const token = authHeader.split(" ")[1]
             const decoded = jwt.verify(
                 token,
-                config.jwt_secret as string
+                config.jwt_secret as string,
             ) as JwtPayload
             const userData = await prisma.user.findUnique({
                 where: {
@@ -28,7 +29,14 @@ const auth = (...roles: UserRole[]) => {
 
             req.user = decoded
             next()
-        } catch (error) {}
+        } catch (error) {
+            sendResponse(res, {
+                statusCode: 401,
+                message: "Unauthorized!!!",
+                success: false,
+                data: error,
+            })
+        }
     }
 }
 export default auth
