@@ -1,0 +1,1 @@
+1. req.body might say undefined. reason : app.use(express.json()) is missing, or, header didn't have "Content-Type":"Application/json" so express didn't parse it.

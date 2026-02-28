@@ -8,9 +8,12 @@ type MedicinePayload = {
     manufacturer: string
     image?: string
     categoryId: string
+    sellerId: string
 }
 
 const createMedicineIntoDB = async (payload: MedicinePayload) => {
+    console.log("payload inside medicine serice createIntoDb => ", payload)
+
     const result = await prisma.medicine.create({
         data: payload,
     })
@@ -36,7 +39,7 @@ const getMedicineByIdFromDB = async (id: string) => {
 
 const updateMedicineIntoDB = async (
     id: string,
-    payload: Partial<MedicinePayload>
+    payload: Partial<MedicinePayload>,
 ) => {
     const existing = await prisma.medicine.findUnique({ where: { id } })
     if (!existing) throw new Error("Medicine not found")

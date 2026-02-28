@@ -28,6 +28,10 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    medicines   Medicine[]   // If seller
+    orders      Order[]      // If customer
+    // reviews     Review[]
 }
 
 
@@ -49,8 +53,48 @@ model Medicine {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
 
-  // sellerId String
-  // seller   User   @relation(fields: [sellerId], references: [id])
+  sellerId String
+  seller   User   @relation(fields: [sellerId], references: [id])
+
+  // reviews       Review[]
+  orderItems    OrderItem[]
 
   createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PLACED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+
+model Order {
+  id          String      @id @default(uuid())
+  customerId  String
+  customer    User        @relation(fields: [customerId], references: [id])
+
+  status      OrderStatus @default(PLACED)
+  address     String
+  totalAmount Float
+
+  orderItems  OrderItem[]
+
+  createdAt   DateTime @default(now())
+}
+
+
+model OrderItem {
+  id          String   @id @default(uuid())
+
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+
+  medicineId  String
+  medicine    Medicine @relation(fields: [medicineId], references: [id])
+
+  quantity    Int
+  price       Float
 }

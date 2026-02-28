@@ -28,6 +28,7 @@ const auth = (...roles: UserRole[]) => {
                 throw new Error("Unauthorized!")
 
             req.user = decoded
+            // console.log(req.user)
             next()
         } catch (error) {
             sendResponse(res, {

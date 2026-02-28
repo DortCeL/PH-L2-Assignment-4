@@ -4,7 +4,13 @@ import { MedicineService } from "./medicine.service"
 
 const createMedicine = async (req: Request, res: Response) => {
     try {
-        const result = await MedicineService.createMedicineIntoDB(req.body)
+        console.log("USER 👉", req.user)
+        console.log("BODY 👉", req.body)
+
+        const result = await MedicineService.createMedicineIntoDB({
+            ...req.body,
+            sellerId: req.user?.id,
+        })
         sendResponse(res, {
             statusCode: 201,
             success: true,
@@ -12,11 +18,12 @@ const createMedicine = async (req: Request, res: Response) => {
             data: result,
         })
     } catch (error) {
+        console.error("ERROR HAPPENED : ", error.message)
         sendResponse(res, {
             statusCode: 400,
             success: false,
-            message: "Something went wrong",
-            data: error,
+            message: error.message,
+            data: null,
         })
     }
 }
@@ -68,10 +75,7 @@ const getMedicineById = async (req: Request, res: Response) => {
 const updateMedicine = async (req: Request, res: Response) => {
     try {
         const id = req.params.id as string
-        const result = await MedicineService.updateMedicineIntoDB(
-            id,
-            req.body
-        )
+        const result = await MedicineService.updateMedicineIntoDB(id, req.body)
         sendResponse(res, {
             statusCode: 200,
             success: true,
